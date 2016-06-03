@@ -1,0 +1,11 @@
+{
+  "name": "politics-notifier",
+  "version": "0.1.0",
+  "description": "Receives events, relays those",
+  "license": "MIT",
+  "dependencies": {
+    "@slack/client": "^3.4.0",
+    "moment": "^2.13.0",
+    "pg-pubsub": "^0.3.0"
+  }
+}
