@@ -7,7 +7,7 @@ var committees = fs.readFileSync(__dirname + '/../committees.txt','utf8').split(
 
 var RtmClient = slack.RtmClient;
 
-var rtm = new RtmClient(process.env.SLACK_TOKEN, {logLevel: 'debug'});
+var rtm = new RtmClient(process.env.SLACK_TOKEN);
 
 var RTM_CLIENT_EVENTS = slack.CLIENT_EVENTS.RTM;
 
