@@ -13,10 +13,10 @@ var RTM_CLIENT_EVENTS = slack.CLIENT_EVENTS.RTM;
 
 var filing_lookup = {};
 
-pubsub.subscribe('fec:importStart');
+pubsub.subscribe('fecImportStart');
 
 rtm.on(RTM_CLIENT_EVENTS.RTM_CONNECTION_OPENED, function () {
-    pubsub.on('fec:importStart',function (filing) {
+    pubsub.on('fecImportStart',function (filing) {
 
         console.log(filing);
 
