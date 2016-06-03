@@ -3,7 +3,7 @@ var fs = require('fs'),
     moment = require('moment'),
     pubsub = require('./pubsub');
 
-var committees = fs.readFileSync(__dirname + '/../committees.txt').split('\n');
+var committees = fs.readFileSync(__dirname + '/../committees.txt','utf8').split('\n');
 
 var RtmClient = slack.RtmClient;
 
