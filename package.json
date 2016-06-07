@@ -4,8 +4,13 @@
   "description": "Receives events, relays those",
   "license": "MIT",
   "dependencies": {
+    "handlebars": "^4.0.5",
+    "handlebars-intl": "^1.1.2",
+    "js-yaml": "^3.6.1",
     "moment": "^2.13.0",
+    "nodemailer": "^2.4.2",
     "pg-pubsub": "^0.3.0",
     "request": "^2.72.0"
-  }
+  },
+  "main": "./src/index.js"
 }

@@ -1,0 +1,12 @@
+---
+channels:
+    - testtest
+
+senders:
+    - console
+
+message:
+    text: >
+        {{ committee_name }} ({{ filer_committee_id_number }}) filed a
+        {{ form_type }} for the period ending {{formatDate coverage_through_date day="numeric" month="long" year="numeric"}}
+        <http://docquery.fec.gov/cgi-bin/forms/{{ filer_committee_id_number }}/{{ filing_id }}/>
