@@ -1,0 +1,11 @@
+---
+channels:
+    - fecimportstart
+
+senders:
+    - console
+
+message:
+    text: >
+        {{{ committee_name }}} ({{ filer_committee_id_number }}) filed a
+        {{ form_type }} for the period ending {{ coverage_through_date }}.
