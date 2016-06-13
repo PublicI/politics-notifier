@@ -12,10 +12,30 @@ function readDir(dir,ext) {
     var files = fs.readdirSync(dir);
 
     return files.filter(function (file) {
-        return file.indexOf('.' + ext) !== -1;
+        return file.indexOf('.' + ext) === file.length-ext.length-1;
     }).map(function (file) {
         return dir + '/' + file;
     });
+}
+
+function mapRecursive(fn,obj) {
+    if (Array.isArray(obj)) {
+        return obj.map(mapRecursive.bind(this,fn));
+    }
+    else if (obj === null) {
+        return null;
+    }
+    else if (typeof obj == 'object') {
+        var newObj = {};
+
+        Object.keys(obj).forEach(function(key) {
+            newObj[key] = mapRecursive(fn,obj[key]);
+        });
+
+        return newObj;
+    }
+    
+    return fn(obj);
 }
 
 function renderMessage(template,payload) {
@@ -26,20 +46,28 @@ function renderMessage(template,payload) {
             }
         }
     };
-    
-    var message = {};
 
-    Object.keys(payload).forEach(function (key) {
+    payload = mapRecursive(function (value) {
+        /*
         if (key.indexOf('date') !== -1) {
             payload[key] = new Date(payload[key]);
+        }*/
+        if ((value - parseFloat(value) + 1) >= 0) { // isNumeric
+            value = parseFloat(value);
         }
-    });
 
-    Object.keys(template.message).forEach(function(key) {
-        var compiled = Handlebars.compile(template.message[key].trim());
+        return value;
+    },payload);
 
-        message[key] = compiled(payload,templateOpts);
-    });
+    var message = mapRecursive(function(value) {
+        if (typeof value == 'string') {
+            var compiled = Handlebars.compile(value.trim());
+
+            return compiled(payload,templateOpts);
+        }
+
+        return value;
+    },template.message);
 
     return message;
 }
@@ -73,13 +101,15 @@ function init() {
         senders = {},
         channels = [];
 
-    templates = readDir('templates','yaml').map(function (file) {
+    templates = readDir('templates','yml').map(function (file) {
         return yaml.safeLoad(fs.readFileSync(file,'utf8'));
     });
 
     readDir('senders','js').forEach(function (file) {
         senders[file.split('/').pop().replace('.js','')] = require(file);
     });
+
+    var committees = fs.readFileSync(__dirname + '/../committees.txt','utf8').split('\n');
 
     templates.forEach(function (template) {
         if (template.channels) {
@@ -91,7 +121,10 @@ function init() {
                 }
 
                 pubsub.on(channel,function (payload) {
-                    sendMessage(senders,template,payload);
+                    if (payload.filer_committee_id_number &&
+                        committees.indexOf(payload.filer_committee_id_number) !== -1) {
+                        sendMessage(senders,template,payload);
+                    }
                 });
             });
         }
