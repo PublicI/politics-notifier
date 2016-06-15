@@ -8,5 +8,5 @@ var transport = nodemailer.createTransport(sesTransport({
 }));
 
 module.exports = function (message,cb) {
-    transporter.sendMail(message, cb);
+    transport.sendMail(message, cb);
 };
