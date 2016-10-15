@@ -1,6 +1,7 @@
 var fs = require('fs'),
     Handlebars = require('handlebars'),
     HandlebarsIntl = require('handlebars-intl'),
+    pg = require('pg'),
     PGPubsub = require('pg-pubsub'),
     yaml = require('js-yaml');
 
@@ -97,6 +98,14 @@ function init() {
         process.env.DB_HOST + ':' + process.env.DB_PORT + '/' +
         process.env.DB_NAME);
 
+    var pool = new pg.Pool({
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        database: process.env.DB_NAME
+    });
+
     var templates = [],
         senders = {},
         channels = [];
@@ -109,8 +118,6 @@ function init() {
         senders[file.split('/').pop().replace('.js','')] = require(file);
     });
 
-    var committees = fs.readFileSync(__dirname + '/../committees.txt','utf8').split('\n');
-
     templates.forEach(function (template) {
         if (template.channels) {
             template.channels.forEach(function (channel) {
@@ -121,9 +128,17 @@ function init() {
                 }
 
                 pubsub.on(channel,function (payload) {
-                    if (payload.filer_committee_id_number &&
-                        committees.indexOf(payload.filer_committee_id_number) !== -1) {
-                        sendMessage(senders,template,payload);
+                    if (payload.filer_committee_id_number) {
+                        pool.query('SELECT * FROM cpi_watchlist WHERE fec_filer_id = $1;',
+                            [payload.filer_committee_id_number], function(err, result) {
+                                if (err) {
+                                    console.error(err);
+                                }
+                                
+                                if (typeof result !== 'undefined' && result && result.rows && result.rows.length > 0) {
+                                    sendMessage(senders,template,payload);
+                                }
+                        });
                     }
                 });
             });
