@@ -1,0 +1,25 @@
+---
+channels:
+    - fecimportstart
+
+senders:
+    - email
+
+message:
+    from: alerts@publicintegrity.org
+    to: dlevinthal@publicintegrity.org,mbeckel@publicintegrity.org,clevine@publicintegrity.org,czubakskees@publicintegrity.org,bwieder@publicintegrity.org
+    # to: czubakskees@publicintegrity.org
+    subject: "{{{ committee_name }}} filed an {{ form_type }}{{#if coverage_through_date}} for the period ending {{ coverage_through_date }}{{/if}}"
+    text: >
+        {{{ committee_name }}} ({{ filer_committee_id_number }}) filed a
+        {{ form_type }}{{#if coverage_through_date}} for the period ending
+        {{ coverage_through_date }}.{{/if}}
+        {{#if col_a_cash_on_hand_close_of_period}}
+        It raised {{formatNumber col_a_total_receipts style="currency" currency="USD"}},
+        spent {{formatNumber col_a_total_disbursements style="currency" currency="USD"}} and
+        had {{formatNumber col_a_cash_on_hand_close_of_period style="currency" currency="USD"}}.
+        {{/if}}
+        http://docquery.fec.gov/cgi-bin/forms/{{ filer_committee_id_number }}/{{ filing_id }}/
+        {{#if col_a_cash_on_hand_close_of_period}}
+        http://dash.fivetwentyseven.com/sheet/{{filing_id}}.xlsx
+        {{/if}}

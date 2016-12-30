@@ -1,0 +1,33 @@
+---
+channels:
+    - fecimportstart
+
+senders:
+    - slack
+
+message:
+    attachments:
+        -   title: "{{ form_type }} from {{{ committee_name }}} ({{ filer_committee_id_number }}){{#if coverage_through_date}} for {{ coverage_through_date }}{{/if}}"
+            title_link: http://docquery.fec.gov/cgi-bin/forms/{{ filer_committee_id_number }}/{{ filing_id }}/
+            fields:
+                -   title: Raised
+                    value: "{{#if col_a_total_receipts}}{{formatNumber col_a_total_receipts style=\"currency\" currency=\"USD\"}}{{/if}}"
+                    short: true
+                -   title: Spent
+                    value: "{{#if col_a_total_disbursements}}{{formatNumber col_a_total_disbursements style=\"currency\" currency=\"USD\"}}{{/if}}"
+                    short: true
+                -   title: Cash-on-hand
+                    value: "{{#if col_a_cash_on_hand_close_of_period}}{{formatNumber col_a_cash_on_hand_close_of_period style=\"currency\" currency=\"USD\"}}{{/if}}"
+                    short: true
+                -   title: Download
+                    value: <https://dash.fivetwentyseven.com/sheet/{{filing_id}}.xlsx|Excel sheet>
+                    short: true
+            fallback: >
+                {{{ committee_name }}} ({{ filer_committee_id_number }}) filed a
+                {{ form_type }}{{#if coverage_through_date}} for the period ending {{ coverage_through_date }}.{{/if}}
+                {{#if col_a_cash_on_hand_close_of_period}}
+                It raised {{formatNumber col_a_total_receipts style="currency" currency="USD"}},
+                spent {{formatNumber col_a_total_disbursements style="currency" currency="USD"}} and
+                had {{formatNumber col_a_cash_on_hand_close_of_period style="currency" currency="USD"}}.
+                {{/if}}
+                http://docquery.fec.gov/cgi-bin/forms/{{ filer_committee_id_number }}/{{ filing_id }}/
