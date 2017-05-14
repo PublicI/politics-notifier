@@ -7,8 +7,7 @@ senders:
 
 message:
     from: alerts@publicintegrity.org
-    to: dlevinthal@publicintegrity.org,mbeckel@publicintegrity.org,clevine@publicintegrity.org,czubakskees@publicintegrity.org,bwieder@publicintegrity.org
-    # to: czubakskees@publicintegrity.org
+    to: dlevinthal@publicintegrity.org,clevine@publicintegrity.org,czubakskees@publicintegrity.org
     subject: "{{{ committee_name }}} filed an {{ form_type }}{{#if coverage_through_date}} for the period ending {{ coverage_through_date }}{{/if}}"
     text: >
         {{{ committee_name }}} ({{ filer_committee_id_number }}) filed a
