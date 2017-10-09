@@ -20,7 +20,7 @@ message:
                     value: "{{#if col_a_cash_on_hand_close_of_period}}{{formatNumber col_a_cash_on_hand_close_of_period style=\"currency\" currency=\"USD\"}}{{/if}}"
                     short: true
                 -   title: Download
-                    value: <https://dash.fivetwentyseven.com/sheet/{{filing_id}}.xlsx|Excel sheet>
+                    value: <http://sheets.apps.fivetwentyseven.com/{{filing_id}}.xlsx|Excel sheet>
                     short: true
             fallback: >
                 {{{ committee_name }}} ({{ filer_committee_id_number }}) filed a

@@ -20,5 +20,5 @@ message:
         {{/if}}
         http://docquery.fec.gov/cgi-bin/forms/{{ filer_committee_id_number }}/{{ filing_id }}/
         {{#if col_a_cash_on_hand_close_of_period}}
-        http://dash.fivetwentyseven.com/sheet/{{filing_id}}.xlsx
+        http://sheets.apps.fivetwentyseven.com/{{filing_id}}.xlsx
         {{/if}}
