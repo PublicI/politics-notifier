@@ -57,10 +57,10 @@ spec:
             secretKeyRef:
               key:  aws_access_key_id
               name: {{ .Release.Name }}-auth
-        - name: "AWS_ACCESS_KEY_ID"
+        - name: "AWS_SECRET_ACCESS_KEY"
           valueFrom:
             secretKeyRef:
-              key:  aws_access_key_id
+              key:  aws_secret_access_key
               name: {{ .Release.Name }}-auth
         - name: "SLACK_WEBHOOK"
           valueFrom:
