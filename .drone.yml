@@ -1,8 +1,40 @@
 pipeline:
-  build:
+  build_dry_run:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/politics-notifier
+    cache_from: "publicintegrity/politics-notifier:latest"
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
+    dry_run: true
+    when:
+      event: [push, tag]
+
+  build_push:
+    image: plugins/docker
+    secrets: [ docker_username, docker_password ]
+    repo: publicintegrity/politics-notifier
+    cache_from: "publicintegrity/politics-notifier:latest"
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
+    when:
+      event: deployment
+      environment: production
+
+  helm_dry_run:
+    image: peloton/drone-helm
+    chart: ./charts/politics-notifier
+    release: notifier
+    values: db.user=$${DB_USER},db.pass=$${DB_PASS},db.host=$${DB_HOST},db.name=$${DB_NAME},slack.webhook=$${NOTIFY_SLACK_WEBHOOK},aws.access_key_id=$${AWS_ACCESS_KEY_ID},aws.secret_access_key=$${AWS_SECRET_ACCESS_KEY},image.repository=publicintegrity/politics-notifier,image.tag=latest
+    prefix: 
+    namespace: notifier
+    dry_run: true
+    secrets: [ api_server, kubernetes_token, db_user, db_pass, db_host, db_name, notify_slack_webhook, aws_access_key_id, aws_secret_access_key ]
+    skip_tls_verify: true
+    when:
+      event: [push, tag]
 
   helm_deploy:
     image: peloton/drone-helm
@@ -13,6 +45,9 @@ pipeline:
     namespace: notifier
     secrets: [ api_server, kubernetes_token, db_user, db_pass, db_host, db_name, notify_slack_webhook, aws_access_key_id, aws_secret_access_key ]
     skip_tls_verify: true
+    when:
+      event: deployment
+      environment: production
 
   slack:
     image: plugins/slack
