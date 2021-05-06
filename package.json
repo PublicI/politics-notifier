@@ -4,7 +4,7 @@
   "description": "Receives events, relays those",
   "license": "MIT",
   "dependencies": {
-    "handlebars": "^4.0.5",
+    "handlebars": "^4.7.7",
     "handlebars-intl": "^1.1.2",
     "js-yaml": "^3.6.1",
     "moment": "^2.13.0",
